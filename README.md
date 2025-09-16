@@ -36,16 +36,18 @@ chmod +x cleanup_gcs_buckets.sh
 
 ## Usage
 
-1. Create a mapping file with S3 and GCS URL pairs (space-separated):
+1. Edit the `bucket_urls.txt` file with your S3 and GCS URL pairs:
 ```
 s3://source-bucket/path1 gs://destination-bucket/path1
 s3://source-bucket/path2 gs://destination-bucket/path2
 ```
 
-2. Update the script to point to your mapping file:
-```bash
-# Edit the last line in cleanup_gcs_buckets.sh
-done < "/path/to/your/mapping/file"
+2. Update `aws-creds.json` with your AWS credentials:
+```json
+{
+  "accessKeyId": "YOUR_AWS_ACCESS_KEY_ID",
+  "secretAccessKey": "YOUR_AWS_SECRET_ACCESS_KEY"
+}
 ```
 
 3. Run the cleanup script:
@@ -55,7 +57,7 @@ done < "/path/to/your/mapping/file"
 
 ## Input File Format
 
-The mapping file should contain one S3-to-GCS URL pair per line:
+The `bucket_urls.txt` file should contain one S3-to-GCS URL pair per line:
 ```
 s3://my-s3-bucket/folder1 gs://my-gcs-bucket/folder1
 s3://my-s3-bucket/folder2 gs://my-gcs-bucket/folder2
