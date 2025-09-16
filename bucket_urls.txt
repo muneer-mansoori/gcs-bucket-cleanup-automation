@@ -1,0 +1,4 @@
+s3://my-source-bucket/data/folder1 gs://my-destination-bucket/data/folder1
+s3://my-source-bucket/data/folder2 gs://my-destination-bucket/data/folder2
+s3://my-source-bucket/logs gs://my-destination-bucket/logs
+s3://another-s3-bucket/backups gs://my-gcs-bucket/backups
