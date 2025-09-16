@@ -1,25 +1,30 @@
-# GCS Bucket Cleanup for S3-to-GCS Migration
+# S3-to-GCS Migration Toolkit
 
-A simple bash script to automate Google Cloud Storage (GCS) bucket cleanup before migrating data from AWS S3.
+Automation scripts for AWS S3 to Google Cloud Storage migration with GCS bucket cleanup and transfer job creation.
 
 ## Overview
 
-During cloud migrations from AWS S3 to Google Cloud Storage, it's crucial to ensure destination buckets are clean to avoid conflicts and ensure data integrity. This script automates the cleanup process by reading S3-to-GCS URL mappings and clearing the corresponding GCS directories.
+This toolkit provides essential scripts for S3-to-GCS migration:
+1. **GCS Cleanup**: Clean destination buckets before migration
+2. **Transfer Job Creation**: Create Google Cloud Transfer Service jobs for automated migration
 
 ## Features
 
-- ✅ Batch cleanup of multiple GCS buckets/directories
-- ✅ Input validation for S3 URL format
-- ✅ Parallel processing with `gsutil -m` for faster operations
-- ✅ Graceful error handling for non-existent directories
-- ✅ Comprehensive logging for audit trails
-- ✅ Automatic URL normalization
+- ✅ **GCS Bucket Cleanup**: Batch cleanup with parallel processing
+- ✅ **Transfer Job Creation**: Automated Google Cloud Transfer Service jobs
+- ✅ **Input Validation**: S3 URL format verification
+- ✅ **Error Handling**: Graceful handling of non-existent resources
+- ✅ **Audit Logging**: Comprehensive operation tracking
+- ✅ **URL Normalization**: Automatic trailing slash handling
 
 ## Prerequisites
 
-- **Google Cloud SDK**: Install and configure `gsutil`
+- **Google Cloud SDK**: Install and configure `gcloud` and `gsutil`
 - **Authentication**: Authenticate with Google Cloud using `gcloud auth login`
-- **Permissions**: Ensure your account has delete permissions on target GCS buckets
+- **APIs**: Enable Google Cloud Transfer Service API
+- **Permissions**: 
+  - GCS: Delete permissions on target buckets
+  - Transfer Service: Create and manage transfer jobs
 
 ## Installation
 
@@ -29,20 +34,23 @@ git clone https://github.com/yourusername/s3-gcs-migration.git
 cd s3-gcs-migration
 ```
 
-2. Make the script executable:
+2. Make scripts executable:
 ```bash
 chmod +x cleanup_gcs_buckets.sh
+chmod +x create_transfer_jobs.sh
 ```
 
 ## Usage
 
-1. Edit the `bucket_urls.txt` file with your S3 and GCS URL pairs:
+### 1. Setup Configuration Files
+
+Edit the `bucket_urls.txt` file with your S3 and GCS URL pairs:
 ```
 s3://source-bucket/path1 gs://destination-bucket/path1
 s3://source-bucket/path2 gs://destination-bucket/path2
 ```
 
-2. Update `aws-creds.json` with your AWS credentials:
+Update `aws-creds.json` with your AWS credentials:
 ```json
 {
   "accessKeyId": "YOUR_AWS_ACCESS_KEY_ID",
@@ -50,9 +58,16 @@ s3://source-bucket/path2 gs://destination-bucket/path2
 }
 ```
 
-3. Run the cleanup script:
+### 2. Clean GCS Buckets (Optional)
+Clean destination buckets before migration:
 ```bash
 ./cleanup_gcs_buckets.sh
+```
+
+### 3. Create Transfer Jobs
+Create Google Cloud Transfer Service jobs:
+```bash
+./create_transfer_jobs.sh
 ```
 
 ## Input File Format
@@ -67,13 +82,20 @@ s3://my-s3-bucket/folder2 gs://my-gcs-bucket/folder2
 - Empty lines are ignored
 - GCS URLs are automatically normalized with trailing slashes
 
-## Example Output
+## Example Outputs
 
+**GCS Cleanup:**
 ```
 Cleaning up contents of GCS directory: gs://my-gcs-bucket/folder1/
 Contents deleted from: gs://my-gcs-bucket/folder1/
 Cleaning up contents of GCS directory: gs://my-gcs-bucket/folder2/
 No files to delete or directory doesn't exist: gs://my-gcs-bucket/folder2/
+```
+
+**Transfer Job Creation:**
+```
+Creating transfer job for: s3://source-bucket/data/ -> gs://dest-bucket/data/
+Transfer job created successfully: projects/my-project/transferJobs/12345
 ```
 
 ## Safety Considerations
@@ -92,11 +114,3 @@ No files to delete or directory doesn't exist: gs://my-gcs-bucket/folder2/
 3. Commit your changes (`git commit -am 'Add improvement'`)
 4. Push to the branch (`git push origin feature/improvement`)
 5. Create a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Support
-
-If you encounter any issues or have questions, please [open an issue](https://github.com/yourusername/s3-gcs-migration/issues).
